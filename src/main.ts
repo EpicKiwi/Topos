@@ -31,6 +31,8 @@ import showdown from "showdown";
 showdown.setFlavor("github");
 import showdownHighlight from "showdown-highlight";
 import { makeStringExtensions } from "./StringExtensions";
+import { CompletionContext, CompletionResult, autocompletion } from "@codemirror/autocomplete";
+import DocHelper from "./Documentation/DocHelper";
 const classMap = {
   h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
   h2: "text-white lg:text-3xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
@@ -77,7 +79,7 @@ export class Editor {
   state: EditorState;
   api: UserAPI;
   selectedExample: string | null = "";
-  docs: { [key: string]: string } = {};
+  docs: {_helper?: DocHelper } & { [key: string]: string } = {};
 
   // Audio stuff
   audioContext: AudioContext;
@@ -251,6 +253,48 @@ export class Editor {
       EditorView.updateListener.of((v: ViewUpdate) => {
         v;
       }),
+      autocompletion({
+        activateOnTyping: false,
+        closeOnBlur: true,
+        override: [
+          // Autocomplete from Documentation
+          (ctx: CompletionContext): CompletionResult|null => {
+            let word = ctx.matchBefore(/\w*\.?/);
+            if(word && this.docs._helper){
+
+              if(word.text == "." || word.text.endsWith(".")){
+                console.log(Object.values(this.docs._helper.functions)
+                .filter(it => it.isMethod))
+                return {
+                  from: word.to,
+                  options: Object.values(this.docs._helper.functions)
+                    .filter(it => it.isMethod)
+                    .map(it => ({
+                      label: it.name,
+                      type: "function",
+                      info: it.description,
+                      apply: it.name+"("+(it.args.length == 0 ? ")" : "")
+                    }))
+                }
+              } else {
+                return {
+                  from: word.from,
+                  options: Object.values(this.docs._helper.functions)
+                    .filter(it => !it.isMethod && (!word || it.name.startsWith(word.text)))
+                    .map(it => ({
+                      label: it.label,
+                      type: "function",
+                      info: it.description,
+                      apply: it.name+"("+(it.args.length == 0 ? ")" : "")
+                    }))
+                };
+              }
+
+            }
+            return null;
+          }
+        ]
+      })
     ];
 
     let dynamicPlugins = new Compartment();

@@ -1,4 +1,5 @@
-import { type Editor } from "./main";
+import { type Editor } from "../main";
+import DocHelper from "./DocHelper";
 
 const key_shortcut = (shortcut: string): string => {
   return `<kbd class="lg:px-2 lg:py-1.5 px-1 py-1 lg:text-sm text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">${shortcut}</kbd>`;
@@ -44,6 +45,8 @@ const injectAvailableSamples = (application: Editor): string => {
 };
 
 export const documentation_factory = (application: Editor) => {
+  let D = new DocHelper();
+
   let counter = 0; // Counter to generate unique IDs for code snippets
 
   // Initialize a data structure to store code examples by their unique IDs
@@ -252,15 +255,15 @@ Time in Topos is flowing just like on a drum machine. Topos is counting bars, be
 - **beats**: how many beats have elapsed since the beginning of the bar.
 - **pulse**: how many pulses have elapsed since the last beat.
 	
-To change the tempo, use the <icode>bpm(number)</icode> function. The transport is controlled by the interface buttons, by the keyboard shortcuts or using the <icode>play()</icode>, <icode>pause()</icode> and <icode>stop()</icode> functions. You will soon learn how to manipulate time to your liking for backtracking, jumping forward, etc... The traditional timeline model has little value when you can script everything.
+To change the tempo, use the ${D.fn("bpm(number)")} function. The transport is controlled by the interface buttons, by the keyboard shortcuts or using the ${D.fn("play()")}, ${D.fn("pause()")} and ${D.fn("stop()")} functions. You will soon learn how to manipulate time to your liking for backtracking, jumping forward, etc... The traditional timeline model has little value when you can script everything.
 	
-**Note:** the <icode>bpm(number)</icode> function can serve both for getting and setting the **BPM** value.
+**Note:** the ${D.fn("bpm(number)")} function can serve both for getting and setting the **BPM** value.
 	
 ## Simple rhythms
 	
-Let's study two very simple rhythmic functions, <icode>mod(n: ...number[])</icode> and <icode>onbeat(...n:number[])</icode>. They are both easy to understand and powerful enough to get you to play your first rhythms.
+Let's study two very simple rhythmic functions, ${D.fn("mod(...n:number[])")} and ${D.fn("onbeat(...n:number[])")}. They are both easy to understand and powerful enough to get you to play your first rhythms.
 	
-- <icode>mod(...n: number[])</icode>: this function will return true every _n_ pulsations. The value <icode>1</icode> will return <icode>true</icode> at the beginning of each beat. Floating point numbers like <icode>0.5</icode> or <icode>0.25</icode> are also accepted. Multiple values can be passed to <icode>mod</icode> to generate more complex rhythms.
+- ${D.fn("mod(...n: number[])")}": this function will return true every _n_ pulsations. The value <icode>1</icode> will return <icode>true</icode> at the beginning of each beat. Floating point numbers like <icode>0.5</icode> or <icode>0.25</icode> are also accepted. Multiple values can be passed to <icode>mod</icode> to generate more complex rhythms.
 	
 ${makeExample(
   "Using different mod values",
@@ -284,7 +287,7 @@ mod([1,0.75].div(2)) :: blip([50, 100].div(2)).out();
 )}
 
 
-- <icode>modp(...n: number[])</icode>: extreme version of the <icode>mod</icode> function. Instead of being normalised, this function is returning a modulo of real pulses! It can be used to break out of ratios and play with real clock pulses for unexpected results.
+- ${D.fn("modp(...n: number[])")}": extreme version of the <icode>mod</icode> function. Instead of being normalised, this function is returning a modulo of real pulses! It can be used to break out of ratios and play with real clock pulses for unexpected results.
 
 ${makeExample(
 "Intriguing rhythms",
@@ -303,7 +306,7 @@ modp([48, 24, 16].div(4)) :: sound('linnhats').out()
 mod(1)::snd('bd').out()
 `, false)};
 
-- <icode>onbeat(...n: number[])</icode>: By default, the bar is set in <icode>4/4</icode> with four beats per bar. The <icode>onbeat</icode> function allows you to lock on to a specific beat to execute some code. It can accept multiple arguments. It's usage is very straightforward and not hard to understand. You can pass integers or floating point numbers.
+- ${D.fn("onbeat(...n: number[])")}": By default, the bar is set in <icode>4/4</icode> with four beats per bar. The <icode>onbeat</icode> function allows you to lock on to a specific beat to execute some code. It can accept multiple arguments. It's usage is very straightforward and not hard to understand. You can pass integers or floating point numbers.
 
 ${makeExample(
   "Some simple yet detailed rhythms",
@@ -330,9 +333,9 @@ mod([.25, 1/8].div(1.5))::snd('hat').n(2)
 	
 ## Rhythm generators
 	
-We included a bunch of popular rhythm generators in Topos such as the euclidian rhythms algorithms or the one to generate rhythms based on a binary sequence. They all work using _iterators_ that you will gradually learn to use for iterating over lists. Note that they are levaraging <icode>mod(...n:number[])</icode> that you just learned about!
+We included a bunch of popular rhythm generators in Topos such as the euclidian rhythms algorithms or the one to generate rhythms based on a binary sequence. They all work using _iterators_ that you will gradually learn to use for iterating over lists. Note that they are levaraging ${D.fn("mod(...n:number[])")}" that you just learned about!
 	
-- <icode>euclid(iterator: number, pulses: number, length: number, rotate: number): boolean</icode>: generates <icode>true</icode> or <icode>false</icode> values from an euclidian rhythm sequence. This algorithm is very popular in the electronic music making world.
+- ${D.fn("euclid(iterator: number, pulses: number, length: number, rotate: number): boolean")}: generates <icode>true</icode> or <icode>false</icode> values from an euclidian rhythm sequence. This algorithm is very popular in the electronic music making world.
 	
 ${makeExample(
   "Classic euclidian club music patterns",
@@ -366,7 +369,7 @@ mod(.25) && euclid($(4), 7, 9, 1) && snd('hh').out()
 )}
 
 
-- <icode>rhythm(divisor: number, pulses: number, length: number, rotate: number): boolean</icode>: generates <icode>true</icode> or <icode>false</icode> values from an euclidian rhythm sequence. This is another version of <icode>euclid</icode> that does not take an iterator.
+- ${D.fn("rhythm(divisor: number, pulses: number, length: number, rotate: number): boolean")}": generates <icode>true</icode> or <icode>false</icode> values from an euclidian rhythm sequence. This is another version of <icode>euclid</icode> that does not take an iterator.
 ${makeExample(
 "rhythm is a beginner friendly rhythmic function!",
 `
@@ -381,7 +384,7 @@ rhythm(speed, 7, 12) :: snd('east').n(9).out()
 
 
 
-- <icode>bin(iterator: number, n: number): boolean</icode>: a binary rhythm generator. It transforms the given number into its binary representation (_e.g_ <icode>34</icode> becomes <icode>100010</icode>). It then returns a boolean value based on the iterator in order to generate a rhythm.
+- ${D.fn("bin(iterator: number, n: number): boolean")}</icode>: a binary rhythm generator. It transforms the given number into its binary representation (_e.g_ <icode>34</icode> becomes <icode>100010</icode>). It then returns a boolean value based on the iterator in order to generate a rhythm.
 	
 ${makeExample(
   "Change the integers for a surprise rhythm!",
@@ -428,7 +431,7 @@ prob(80)::mod(.5) && sound('hh').out()
 	
 Now you know how to play some basic rhythmic music but you are a bit stuck in a one-bar long loop. Let's see how we can think about time flowing on longer periods. The functions you are going to learn now are _very fundamental_ and all the fun comes from mastering them. **Read and experiment a lot with the following examples**.
 	
-- <icode>div(n: number)</icode>: the <icode>div</icode> is a temporal switch. If the value <icode>2</icode> is given, the function will return <icode>true</icode> for two beats and <icode>false</icode> for two beats. There are multiple ways to use it effectively. You can pass an integer or a floating point number. Here are some examples.
+- ${D.fn("div(n: number)")}": the <icode>div</icode> is a temporal switch. If the value <icode>2</icode> is given, the function will return <icode>true</icode> for two beats and <icode>false</icode> for two beats. There are multiple ways to use it effectively. You can pass an integer or a floating point number. Here are some examples.
 	
 ${makeExample(
   "Creating two beats of silence",
@@ -490,7 +493,7 @@ div(.125) :: mod(.5) :: sound('amencutup')
 )}
 
 	
-- <icode>divbar(n: number)</icode>: works just like <icode>div</icode> but at the level of bars instead of beats. It allows you to think about even bigger time cycles. You can also pair it with regular <icode>div</icode> for making complex algorithmic beats.
+- ${D.fn("divbar(n: number)")}: works just like <icode>div</icode> but at the level of bars instead of beats. It allows you to think about even bigger time cycles. You can also pair it with regular <icode>div</icode> for making complex algorithmic beats.
 	
 ${makeExample(
   "Thinking music over bars",
@@ -509,7 +512,7 @@ divbar(2)
 `, false)};
 
 	
-- <icode>onbar(bars: number | number[], n: number)</icode>: The second argument, <icode>n</icode>, is used to divide the time in a period of <icode>n</icode> consecutive bars. The first argument should be a bar number or a list of bar numbers to play on. For example, <icode>onbar([1, 4], 5)</icode> will return <icode>true</icode> on bar <icode>1</icode> and <icode>4</icode> but return <icode>false</icode> the rest of the time. You can easily divide time that way.
+- ${D.fn("onbar(bars: number | number[], n: number)")}: The second argument, <icode>n</icode>, is used to divide the time in a period of <icode>n</icode> consecutive bars. The first argument should be a bar number or a list of bar numbers to play on. For example, <icode>onbar([1, 4], 5)</icode> will return <icode>true</icode> on bar <icode>1</icode> and <icode>4</icode> but return <icode>false</icode> the rest of the time. You can easily divide time that way.
 	
 ${makeExample(
   "Using onbar for filler drums",
@@ -529,27 +532,27 @@ if (onbar([4, 1], 3)) {
 
 ## What are pulses?
 	
-To make a beat, you need a certain number of time grains or **pulses**. The **pulse** is also known as the [PPQN](https://en.wikipedia.org/wiki/Pulses_per_quarter_note). By default, Topos is using a _pulses per quarter note_ of 48. You can change it by using the <icode>ppqn(number)</icode> function. It means that the lowest possible rhythmic value is 1/48 of a quarter note. That's plenty of time already.
+To make a beat, you need a certain number of time grains or **pulses**. The **pulse** is also known as the [PPQN](https://en.wikipedia.org/wiki/Pulses_per_quarter_note). By default, Topos is using a _pulses per quarter note_ of 48. You can change it by using the ${D.fn("ppqn(number)")} function. It means that the lowest possible rhythmic value is 1/48 of a quarter note. That's plenty of time already.
 	
-**Note:** the <icode>ppqn(number)</icode> function can serve both for getting and setting the **PPQN** value.
+**Note:** the ${D.fn("ppqn(number)")} function can serve both for getting and setting the **PPQN** value.
 	
 ## Time Primitives
 	
 Every script can access the current time by using the following functions:
 	
-- <icode>bar(n: number)</icode>: returns the current bar since the origin of time.
+- ${D.fn("bar(n: number)")}: returns the current bar since the origin of time.
 	
-- <icode>beat(n: number)</icode>: returns the current beat since the beginning of the bar.
+- ${D.fn("beat(n: number)")}: returns the current beat since the beginning of the bar.
 	
-- <icode>ebeat()</icode>: returns the current beat since the origin of time (counting from 1).
+- ${D.fn("ebeat()")}: returns the current beat since the origin of time (counting from 1).
 	
-- <icode>pulse()</icode>: returns the current bar since the origin of the beat.
+- ${D.fn("pulse()")}: returns the current bar since the origin of the beat.
 	
-- <icode>ppqn()</icode>: returns the current **PPQN** (see above).
+- ${D.fn("ppqn()")}: returns the current **PPQN** (see above).
 	
-- <icode>bpm()</icode>: returns the current **BPM** (see above).
+- ${D.fn("bpm()")}: returns the current **BPM** (see above).
 	
-- <icode>time()</icode>: returns the current wall clock time, the real time of the system.
+- ${D.fn("time()")}: returns the current wall clock time, the real time of the system.
 	
 These values are **extremely useful** to craft more complex syntax or to write musical scores. However, Topos is also offering more high-level sequencing functions to make it easier to play music. You can use the time functions as conditionals. The following example will play a pattern A for 2 bars and a pattern B for 2 bars:
 	
@@ -581,7 +584,7 @@ You can use Topos to play MIDI thanks to the [WebMIDI API](https://developer.moz
 
 Your web browser is capable of sending and receiving MIDI information through the [Web MIDI API](https://developer.mozilla.org/en-US/docs/Web/API/Web_MIDI_API). The support for MIDI on browsers is a bit shaky. Please, take some time to configure and test. To our best knowledge, **Chrome** is currently leading on this feature, followed closely by **Firefox**. The other major web browsers are also starting to support this API. **There are two important functions for configuration:**
 
-- <icode>midi_outputs()</icode>: prints the list of available MIDI devices on the screen. You will have to open the web console using ${key_shortcut("Ctrl+Shift+I")} or sometimes ${key_shortcut("F12")}. You can also open it from the menu of your web browser. **Note:** close the docs to see it printed.
+- ${D.fn("midi_outputs()")}: prints the list of available MIDI devices on the screen. You will have to open the web console using ${key_shortcut("Ctrl+Shift+I")} or sometimes ${key_shortcut("F12")}. You can also open it from the menu of your web browser. **Note:** close the docs to see it printed.
 
 
 ${makeExample(
@@ -590,7 +593,7 @@ ${makeExample(
 midi_outputs()
 `, true)}
 
-- <icode>midi_output(output_name: string)</icode>: enter your desired output to connect to it.
+- ${D.fn("midi_output(output_name: string)")}: enter your desired output to connect to it.
 
 ${makeExample(
 	"Listing MIDI outputs",
@@ -604,7 +607,7 @@ That's it! You are now ready to play with MIDI.
 
 The most basic MIDI event is the note. MIDI notes traditionally take three parameters: _note_ (from <icode>0</icode> to <icode>127</icode>), _velocity_ (from <icode>0</icode> to <icode>127</icode>) and _channel_ (from <icode>0</icode> to <icode>15</icode>). MIDI notes are quite important and can be used for a lot of different things. You can use them to trigger a synthesizer, a drum machine, a robot, or anything really!
 
-- <icode>midi(note: number|object)</icode>: send a MIDI Note. This function is quite bizarre. It can be written and used in many different ways. You can pass form one up to three arguments in different forms.
+- ${D.fn("midi(note: number|object)")}: send a MIDI Note. This function is quite bizarre. It can be written and used in many different ways. You can pass form one up to three arguments in different forms.
 	
 ${makeExample(
 	"MIDI note using one parameter: note",
@@ -644,7 +647,7 @@ sometimes() && mod(.25) && midi(seqbeat(64, 67, 69) + 24).sustain(0.05).out()
 
 ## Control and Program Changes
 	
-- <icode>control_change({control: number, value: number, channel: number})</icode>: send a MIDI Control Change. This function takes a single object argument to specify the control message (_e.g._ <icode>control_change({control: 1, value: 127, channel: 1})</icode>).
+- ${D.fn("control_change({control: number, value: number, channel: number})")}: send a MIDI Control Change. This function takes a single object argument to specify the control message (_e.g._ <icode>control_change({control: 1, value: 127, channel: 1})</icode>).
 	
 ${makeExample(
   "Imagine that I am tweaking an hardware synthesizer!",
@@ -655,7 +658,7 @@ control_change({control: [30,35].pick(), value: irand(1,120) / 2, channel: 1})
   true
 )}
 	
-- <icode>program_change(program: number, channel: number)</icode>: send a MIDI Program Change. This function takes two arguments to specify the program and the channel (_e.g._ <icode>program_change(1, 1)</icode>).
+- ${D.fn("program_change(program: number, channel: number)")}: send a MIDI Program Change. This function takes two arguments to specify the program and the channel (_e.g._ <icode>program_change(1, 1)</icode>).
 	
 ${makeExample(
   "Crashing old synthesizers: a hobby",
@@ -668,7 +671,7 @@ program_change([1,2,3,4,5,6,7,8].pick(), 1)
 	
 ## System Exclusive Messages
 	
-- <icode>sysex(...number[])</icode>: send a MIDI System Exclusive message. This function takes any number of arguments to specify the message (_e.g._ <icode>sysex(0x90, 0x40, 0x7f)</icode>).
+- ${D.fn("sysex(...number[])")}: send a MIDI System Exclusive message. This function takes any number of arguments to specify the message (_e.g._ <icode>sysex(0x90, 0x40, 0x7f)</icode>).
 	
 
 ${makeExample(
@@ -681,7 +684,7 @@ sysex(0x90, 0x40, 0x7f)
 
 ## Clock
 	
-- <icode>midi_clock()</icode>: send a MIDI Clock message. This function is used to synchronize Topos with other MIDI devices or DAWs.
+- ${D.fn("midi_clock()")}: send a MIDI Clock message. This function is used to synchronize Topos with other MIDI devices or DAWs.
 	
 ${makeExample(
   "Tic, tac, tic, tac...",
@@ -699,7 +702,7 @@ The Topos audio engine is based on the [SuperDough](https://www.npmjs.com/packag
 	
 ## Sound basics
 	
-The basic function to play a sound is... <icode>sound(name: string)</icode> (you can also write <icode>snd</icode> to save some precious time). If the given sound or synthesizer exists in the database, it will be automatically queried/started and will start playing. Evaluate the following script in the global window:
+The basic function to play a sound is... ${D.fn("sound(name: string)", "The basic function to play a sound")} (you can also write <icode>snd</icode> to save some precious time). If the given sound or synthesizer exists in the database, it will be automatically queried/started and will start playing. Evaluate the following script in the global window:
 	
 ${makeExample(
   "Playing sounds is easy",
@@ -734,7 +737,7 @@ Now, it reads as follow:
 	
 Let's pause for a moment to explain what we just wrote. There are many things to be said:
 - If you remove the **mod** instruction, you will end up with a deluge of kick drums and high-hats. The **mod** instruction is used to filter out pulses. It is a very useful instruction to create basic rhythms. Check out the **Time** page if you haven't read it already.
-- Playing a sound always ends up with the <icode>.out()</icode> method that gives the instruction to send a message to the audio engine.
+- Playing a sound always ends up with the ${D.fn(".out()")} method that gives the instruction to send a message to the audio engine.
 - Sounds are **composed** by adding qualifiers that will modify the sound or synthesizer being played (_e.g_ <icode>sound('...').blabla(...)..something(...).out()</icode>.
 	
 ${makeExample(
@@ -770,7 +773,7 @@ When you type <icode>kick</icode> in the <icode>sound('kick').out()</icode> expr
 └── kick8.wav
 \`\`\`
 	
-The <icode>.n(number)</icode> method can be used to pick a sample from the currently selected sample folder. For instance, the following script will play a random sample from the _kick_ folder:
+The ${D.fn(".n(number)", "Pick a sample from the currently selected sample folder")} method can be used to pick a sample from the currently selected sample folder. For instance, the following script will play a random sample from the _kick_ folder:
 ${makeExample(
   "Picking a sample",
   `
@@ -789,7 +792,7 @@ mod(.25) && sound('numbers').n(Math.floor(mouseX())).out()`,
   true
 )}
 	
-**Note:** the <icode>sound</icode> function can also be used to play synthesizers (see the **Synthesizers** page). In that case, the <icode>.n(n: number)</icode> becomes totally useless!
+**Note:** the <icode>sound</icode> function can also be used to play synthesizers (see the **Synthesizers** page). In that case, the ${D.fn(".n(n: number)")} becomes totally useless!
 	
 ## Learning about sound modifiers
 	
@@ -996,7 +999,7 @@ Music really comes to life when you start playing with algorithmic patterns. The
 
 JavaScript is using [Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) as a data structure for lists. Topos is extending them with custom methods that allow you to enter softly into a universe of musical patterns. These methods can often be chained to compose a more complex expression: <icode>[1, 2, 3].repeatOdd(5).palindrome().beat()</icode>.
 
-- <icode>div(division: number)</icode>: this method will return the next value in the list every _n_ pulses. By default, <icode>1</icode> equals to one beat but integer and floating point number values are supported as well. This method is extremely powerful and can be used for many different purposes. Check out the examples.
+- ${D.fn(".div(division: number)", "Next value in the list every n pulses")}: this method will return the next value in the list every _n_ pulses. By default, <icode>1</icode> equals to one beat but integer and floating point number values are supported as well. This method is extremely powerful and can be used for many different purposes. Check out the examples.
 
 ${makeExample(
   "Light drumming",
@@ -1038,9 +1041,9 @@ div(4)::mod(2)::snd('pad').n(2).shape(.5).orbit(2).room(0.9).size(0.9).release(0
 
 
 
-- <icode>beat()</icode>: returns the index of the list corresponding to current beat (with wrapping). This allows you to return a different value for each beat.
-- <icode>pulse()</icode>: returns the index of the list corresponding to the current pulse (with wrapping). This method will return a different value for each pulse.
-- <icode>bar()</icode>: returns the index of the list corresponding to the current bar (with wrapping). This method will return a different value for each bar.
+- ${D.fn(".beat()", "index of the list corresponding to current beat")}: returns the index of the list corresponding to current beat (with wrapping). This allows you to return a different value for each beat.
+- ${D.fn(".pulse()", "index of the list corresponding to the current pulse")}: returns the index of the list corresponding to the current pulse (with wrapping). This method will return a different value for each pulse.
+- ${D.fn(".bar()", "index of the list corresponding to the current bar")}: returns the index of the list corresponding to the current bar (with wrapping). This method will return a different value for each bar.
 
 ${makeExample(
   "A simple drumbeat in no time!",
@@ -1062,7 +1065,7 @@ mod([1, 0.5].beat()) :: sound(['bass3'].bar())
 )}
 
 
-- <icode>palindrome()</icode>: Concatenates a list with the same list in reverse.
+- ${D.fn(".palindrome()")}: Concatenates a list with the same list in reverse.
 
 ${makeExample(
   "Palindrome filter sweep",
@@ -1079,9 +1082,9 @@ mod([1,.5,.25].beat()) :: snd('sine')
 )}
 
 
-- <icode>random(index: number)</icode>: pick a random element in the given list.
-- <icode>rand(index: number)</icode>: shorter alias for the same method.
-- <icode>pick()</icode>: pick a random element in the list.
+- ${D.fn(".random(index: number)")}: pick a random element in the given list.
+- ${D.fn(".rand(index: number)")}: shorter alias for the same method.
+- ${D.fn(".pick()")}: pick a random element in the list.
 
 
 ${makeExample(
@@ -1098,7 +1101,7 @@ mod([.5, 1].random() / 2) :: snd(
   true
 )}
 
-- <icode>degrade(amount: number)</icode>: removes _n_% of the list elements. Lists can be degraded as long as one element remains. The amount of degradation is given as a percentage.
+- ${D.fn(".degrade(amount: number)")}: removes _n_% of the list elements. Lists can be degraded as long as one element remains. The amount of degradation is given as a percentage.
 
 ${makeExample(
   "Amen break suffering from data loss",
@@ -1109,9 +1112,9 @@ mod(.25)::snd('amencutup').n([1,2,3,4,5,6,7,8,9].degrade(20).loop($(1))).out()
   true
 )}
 
-- <icode>repeatAll(amount: number)</icode>: repeat every list elements _n_ times.
-- <icode>repeatPair(amount: number)</icode>: repeaet every pair element of the list _n_ times.
-- <icode>repeatOdd(amount: number)</icode>: repeaet every odd element of the list _n_ times.
+- ${D.fn(".repeatAll(amount: number)")}: repeat every list elements _n_ times.
+- ${D.fn(".repeatPair(amount: number)")}: repeaet every pair element of the list _n_ times.
+- ${D.fn(".repeatOdd(amount: number)")}: repeaet every odd element of the list _n_ times.
 
 ${makeExample(
   "Repeating samples a given number of times",
@@ -1122,7 +1125,7 @@ mod(.25)::sound('amencutup').n([1,2,3,4,5,6,7,8].repeatAll(4).beat()).out()
   true
 )}
 
-- <icode>loop(index: number)</icode>: loop takes one argument, the _index_. It allows you to iterate over a list using an iterator such as a counter. This is super useful to control how you are accessing values in a list without relying on a temporal method such as <icode>.beat()</icode> or </icode>.bar()</icode>.
+- ${D.fn(".loop(index: number)")}: loop takes one argument, the _index_. It allows you to iterate over a list using an iterator such as a counter. This is super useful to control how you are accessing values in a list without relying on a temporal method such as ${D.fn(".beat()")} or ${D.fn(".bar()")}.
 
 ${makeExample(
   "Don't you know how to count up to 5?",
@@ -1132,7 +1135,7 @@ mod(1) :: sound('numbers').n([1,2,3,4,5].loop($(3, 10, 2))).out()
   true
 )}
 
-- <icode>shuffle(): this</icode>: shuffles a list! Simple enough!
+- ${D.fn(".shuffle(): this")}: shuffles a list! Simple enough!
 
 ${makeExample(
   "Shuffling a list for extra randomness",
@@ -1142,7 +1145,7 @@ mod(1) :: sound('numbers').n([1,2,3,4,5].shuffle().loop($(1)).out()
   true
 )}
 
-- <icode>rotate(steps: number)</icode>: rotate a list to the right _n_ times. The last value become the first, rinse and repeat.
+- ${D.fn(".rotate(steps: number)")}: rotate a list to the right _n_ times. The last value become the first, rinse and repeat.
 
 ${makeExample(
   "To make things more complex... here you go",
@@ -1157,7 +1160,7 @@ mod(.5) :: snd('sine')
   true
 )}
 
-- <icode>unique()</icode>: filter a list to remove repeated values.
+- ${D.fn(".unique()")}: filter a list to remove repeated values.
 
 ${makeExample(
   "Demonstrative filtering. Final list is [100, 200]",
@@ -1168,10 +1171,10 @@ mod(1)::snd('sine').sustain(0.1).freq([100,100,100,100,200].unique().beat()).out
   true
 )}
 
-- <icode>add()</icode>: add a given amount to every list element.
-- <icode>sub()</icode>: add a given amount to every list element.
-- <icode>mult()</icode>: add a given amount to every list element.
-- <icode>division()</icode>: add a given amount to every list element. The method is named <icode>division</icode> because obviously <icode>div</icode> is already taken.
+- ${D.fn(".add()")}: add a given amount to every list element.
+- ${D.fn(".sub()")}: add a given amount to every list element.
+- ${D.fn(".mult()")}: add a given amount to every list element.
+- ${D.fn(".division()")}: add a given amount to every list element. The method is named <icode>division</icode> because obviously <icode>div</icode> is already taken.
 
 ${makeExample(
 "Simple addition",
@@ -1181,7 +1184,7 @@ true
 
 ## Simple patterns 
 	
-- <icode>divseq(div: number, ...values:any[])</icode>
+- ${D.fn(".divseq(div: number, ...values:any[])")}
 
 `;
 
@@ -1474,11 +1477,11 @@ Topos comes with a small number of basic synthesizers. These synths are based on
 	
 # Substractive Synthesis
 	
-The <icode>sound</icode> function can take the name of a synthesizer as first argument.
+The ${D.fn("sound(name: string)")} function can take the name of a synthesizer as first argument.
 - <icode>sine</icode>, <icode>sawtooth</icode>,<icode>triangle</icode>, <icode>square</icode> for the waveform selection.
-- <icode>cutoff</icode> and <icode>resonance</icode> for adding a low-pass filter with cutoff frequency and filter resonance.
-  - <icode>hcutoff</icode> or <icode>bandf</icode> to switch to a high-pass or bandpass filter.
-	- <icode>hresonance</icode> and <icode>bandq</icode> for the resonance parameter of these filters.
+- ${D.fn(".cutoff") /* TODO document args */} and ${D.fn(".resonance") /* TODO document args */} for adding a low-pass filter with cutoff frequency and filter resonance.
+  - ${D.fn(".hcutoff") /* TODO document args */} or ${D.fn(".bandf") /* TODO document args */} to switch to a high-pass or bandpass filter.
+	- ${D.fn(".hresonance") /* TODO document args */} and ${D.fn(".bandq") /* TODO document args */} for the resonance parameter of these filters.
 	
 ${makeExample(
   "Simple synthesizer voice with filter",
@@ -1533,8 +1536,8 @@ mod(1/8)::sound('sine')
 	
 The same basic waveforms can take additional methods to switch to a basic two operators FM synth design (with _carrier_ and _modulator_). FM Synthesis is a complex topic but take this advice: simple ratios will yield stable and harmonic sounds, complex ratios will generate noises, percussions and gritty sounds.
 	
-- <icode>fmi</icode> (_frequency modulation index_): a floating point value between <icode>1</icode> and <icode>n</icode>.
-- <icode>fmh</icode> (_frequency modulation harmonic ratio_): a floating point value between <icode>1</icode> and <icode>n</icode>.
+- ${D.fn(".fmi")} (_frequency modulation index_): a floating point value between <icode>1</icode> and <icode>n</icode>.
+- ${D.fn(".fmh")} (_frequency modulation harmonic ratio_): a floating point value between <icode>1</icode> and <icode>n</icode>.
 
 ${makeExample(
   "80s nostalgia",
@@ -1583,11 +1586,16 @@ Topos can also speak using [Web Speec API](https://developer.mozilla.org/en-US/d
 
 Speech synthesis can be used in two ways:
 
-- <icode>speak(text: string, voice: number, rate: number, pitch: number)</icode>: speak the given text.
+- ${D.fn("speak(text: string, voice: number, rate: number, pitch: number)")}: speak the given text.
 
 Or by using string and chaining:
 
-- <icode>"Hello".rate(1.5).pitch(0.5).speak()</icode>.
+- ${D.fn(".rate(rate: number)")}
+- ${D.fn(".pitch(pitch: number)")}
+- ${D.fn(".voice(voice: number)")}
+- ${D.fn(".speak()")}
+
+<icode>"Hello".rate(1.5).pitch(0.5).speak()</icode>.
 
 Examples:
 
@@ -1737,9 +1745,9 @@ qjldfqsdklqsjdlkqjsdlqkjdlksjd
 	
 By default, each script is independant from each other. Scripts live in their own bubble and you cannot get or set variables affecting a script from any other script. **However**, everybody knows that global variables are cool and should be used everywhere. This is an incredibely powerful tool to use for radically altering a composition in a few lines of code.
 	
-- <icode>variable(a: number | string, b?: any)</icode>: if only one argument is provided, the value of the variable will be returned through its name, denoted by the first argument. If a second argument is used, it will be saved as a global variable under the name of the first argument.
-	- <icode>delete_variable(name: string)</icode>: deletes a global variable from storage.
-	- <icode>clear_variables()</icode>: clear **ALL** variables. **This is a destructive operation**!
+- ${D.fn("variable(a: number | string, b?: any)")}: if only one argument is provided, the value of the variable will be returned through its name, denoted by the first argument. If a second argument is used, it will be saved as a global variable under the name of the first argument.
+	- ${D.fn("delete_variable(name: string)")}: deletes a global variable from storage.
+	- ${D.fn("clear_variables()")}: clear **ALL** variables. **This is a destructive operation**!
 	
 **Note:** since this example is running in the documentation, we cannot take advantage of the multiple scripts paradigm. Try to send a variable from the global file to the local file n°6.
 
@@ -1761,14 +1769,14 @@ log(v('my_cool_variable'))
 	
 You will often need to use iterators and/or counters to index over data structures (getting a note from a list of notes, etc...). There are functions ready to be used for this. Each script also comes with its own iterator that you can access using the <icode>i</icode> variable. **Note:** the script iteration count is **not** resetted between sessions. It will continue to increase the more you play, even if you just picked up an old project.
 	
-- <icode>counter(name: number | string, limit?: number, step?: number)</icode>: reads the value of the counter <icode>name</icode>. You can also call this function using the dollar symbol: <icode>$</icode>.
+- ${D.fn("counter(name: number | string, limit?: number, step?: number)")}: reads the value of the counter <icode>name</icode>. You can also call this function using the dollar symbol: <icode>$</icode>.
 	- <icode>limit?</icode>: counter upper limit before wrapping up.
 	- <icode>step?</icode>: incrementor. If step is <icode>2</icode>, the iterator will go: <icode>0, 2, 4, 6</icode>, etc...
 	
-- <icode>drunk(n?: number)</icode>: returns the value of the internal drunk walk counter. This iterator will sometimes go up, sometimes go down. It comes with companion functions that you can use to finetune its behavior.
-	- <icode>drunk_max(max: number)</icode>: sets the maximum value.
-	- <icode>drunk_min(min: number)</icode>: sets the minimum value.
-	- <icode>drunk_wrap(wrap: boolean)</icode>: whether to wrap the drunk walk to 0 once the upper limit is reached or not.
+- ${D.fn("drunk(n?: number)")}: returns the value of the internal drunk walk counter. This iterator will sometimes go up, sometimes go down. It comes with companion functions that you can use to finetune its behavior.
+	- ${D.fn("drunk_max(max: number)")}: sets the maximum value.
+	- ${D.fn("drunk_min(min: number)")}: sets the minimum value.
+	- ${D.fn("drunk_wrap(wrap: boolean)")}: whether to wrap the drunk walk to 0 once the upper limit is reached or not.
 
 **Note:** Counters also come with a secret syntax. They can be called with the **$** symbol!
 
@@ -1796,9 +1804,9 @@ rhythm(.25, 6, 8) :: sound('dr').n(drunk()).end(.25).out()
 	
 You can control scripts programatically. This is the core concept of Topos after all!
 	
-- <icode>script(...number: number[])</icode>: call one or more scripts (_e.g. <icode>script(1,2,3,4)</icode>). Once called, scripts will be evaluated once. There are nine local scripts by default. You cannot call the global script nor the initialisation script.
-- <icode>clear_script(number)</icode>: deletes the given script.
-- <icode>copy_script(from: number, to: number)</icode>: copies a local script denoted by its number to another local script. **This is a destructive operation!**
+- ${D.fn("script(...number: number[])")}: call one or more scripts (_e.g. <icode>script(1,2,3,4)</icode>). Once called, scripts will be evaluated once. There are nine local scripts by default. You cannot call the global script nor the initialisation script.
+- ${D.fn("clear_script(number)")}: deletes the given script.
+- ${D.fn("copy_script(from: number, to: number)")}: copies a local script denoted by its number to another local script. **This is a destructive operation!**
 
 ${makeExample(
 	"Calling a script! The most important feature!",
@@ -1818,8 +1826,8 @@ mod(1) :: script(1, 3, 5)
 	
 You can get the current position of the mouse on the screen by using the following functions:
 	
-- <icode>mouseX()</icode>: the horizontal position of the mouse on the screen (as a floating point number).
-- <icode>mouseY()</icode>: the vertical position of the mouse on the screen (as a floating point number).
+- ${D.fn("mouseX()")}: the horizontal position of the mouse on the screen (as a floating point number).
+- ${D.fn("mouseY()")}: the vertical position of the mouse on the screen (as a floating point number).
 	
 ${makeExample(
 	"FM Synthesizer controlled using the mouse",
@@ -1833,8 +1841,8 @@ mod(.25) :: sound('sine')
 
 Current mouse position can also be used to generate notes:
 	
-- <icode>noteX()</icode>: returns a MIDI note number (0-127) based on the horizontal position of the mouse on the screen.
-- <icode>noteY()</icode>: returns a MIDI note number (0-127) based on the vertical position of the mouse on the screen.
+- ${D.fn("noteX()")}: returns a MIDI note number (0-127) based on the horizontal position of the mouse on the screen.
+- ${D.fn("noteY()")}: returns a MIDI note number (0-127) based on the vertical position of the mouse on the screen.
 	
 
 ${makeExample(
@@ -1852,37 +1860,37 @@ mod(.25) :: sound('sine')
 	
 Low Frequency Oscillators (_LFOs_) are an important piece in any digital audio workstation or synthesizer. Topos implements some basic waveforms you can play with to automatically modulate your paremeters. 
 	
-- <icode>sine(freq: number = 1, offset: number= 0): number</icode>: returns a sinusoïdal oscillation between <icode>-1</icode> and <icode>1</icode>.
-- <icode>usine(freq: number = 1, offset: number= 0): number</icode>: returns a sinusoïdal oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_.
+- ${D.fn("sine(freq: number = 1, offset: number= 0): number")}: returns a sinusoïdal oscillation between <icode>-1</icode> and <icode>1</icode>.
+- ${D.fn("usine(freq: number = 1, offset: number= 0): number")}: returns a sinusoïdal oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_.
 	
 ${makeExample(
 	"Modulating the speed of a sample player using a sine LFO", 
 `mod(.25) && snd('cp').speed(1 + usine(0.25) * 2).out()`, true)};
 
-- <icode>triangle(freq: number = 1, offset: number= 0): number</icode>: returns a triangle oscillation between <icode>-1</icode> and <icode>1</icode>.
-- <icode>utriangle(freq: number = 1, offset: number= 0): number</icode>: returns a triangle oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_.
+- ${D.fn("triangle(freq: number = 1, offset: number= 0): number")}: returns a triangle oscillation between <icode>-1</icode> and <icode>1</icode>.
+- ${D.fn("utriangle(freq: number = 1, offset: number= 0): number")}: returns a triangle oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_.
 	
 
 ${makeExample(
 	"Modulating the speed of a sample player using a triangle LFO", 
 `mod(.25) && snd('cp').speed(1 + utriangle(0.25) * 2).out()`, true)}
 	
-- <icode>saw(freq: number = 1, offset: number= 0): number</icode>: returns a sawtooth-like oscillation between <icode>-1</icode> and <icode>1</icode>.
-- <icode>usaw(freq: number = 1, offset: number= 0): number</icode>: returns a sawtooth-like oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_.
+- ${D.fn("saw(freq: number = 1, offset: number= 0): number")}: returns a sawtooth-like oscillation between <icode>-1</icode> and <icode>1</icode>.
+- ${D.fn("usaw(freq: number = 1, offset: number= 0): number")}: returns a sawtooth-like oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_.
 	
 
 ${makeExample(
 	"Modulating the speed of a sample player using a saw LFO", 
 `mod(.25) && snd('cp').speed(1 + usaw(0.25) * 2).out()`, true)}
 	
-- <icode>square(freq: number = 1, offset: number= 0, duty: number = .5): number</icode>: returns a square wave oscillation between <icode>-1</icode> and <icode>1</icode>. You can also control the duty cycle using the <icode>duty</icode> parameter.
-- <icode>usquare(freq: number = 1, offset: number= 0, duty: number = .5): number</icode>: returns a square wave oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_. You can also control the duty cycle using the <icode>duty</icode> parameter.
+- ${D.fn("square(freq: number = 1, offset: number= 0, duty: number = .5): number")}: returns a square wave oscillation between <icode>-1</icode> and <icode>1</icode>. You can also control the duty cycle using the <icode>duty</icode> parameter.
+- ${D.fn("usquare(freq: number = 1, offset: number= 0, duty: number = .5): number")}: returns a square wave oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_. You can also control the duty cycle using the <icode>duty</icode> parameter.
 	
 ${makeExample(
 	"Modulating the speed of a sample player using a square LFO", 
 `mod(.25) && snd('cp').speed(1 + usquare(0.25, 0, 0.25) * 2).out()`,true)};
 	
-- <icode>noise()</icode>: returns a random value between -1 and 1.
+- ${D.fn("noise()")}: returns a random value between -1 and 1.
 	
 ${makeExample(
 	"Modulating the speed of a sample player using noise", 
@@ -1892,8 +1900,8 @@ ${makeExample(
 
 There are some simple functions to play with probabilities.
 
-- <icode>rand(min: number, max:number)</icode>: returns a random number between <icode>min</icode> and <icode>max</icode>. Shorthand _r()_.
-- <icode>irand(min: number, max:number)</icode>: returns a random integer between <icode>min</icode> and <icode>max</icode>. Shorthands _ir()_ or _rI()_.
+- ${D.fn("rand(min: number, max:number)")}: returns a random number between <icode>min</icode> and <icode>max</icode>. Shorthand _r()_.
+- ${D.fn("irand(min: number, max:number)")}: returns a random integer between <icode>min</icode> and <icode>max</icode>. Shorthands _ir()_ or _rI()_.
 
 ${makeExample(
 	"Bleep bloop, what were you expecting?",
@@ -1902,8 +1910,8 @@ rhythm(0.125, 10, 16) :: sound('sid').n(4).note(50 + irand(50, 62) % 8).out()
 `, true)}
 
 
-- <icode>prob(p: number)</icode>: return <icode>true</icode> _p_% of time, <icode>false</icode> in other cases.
-- <icode>toss()</icode>: throwing a coin. Head (<icode>true</icode>) or tails (<icode>false</icode>).
+- ${D.fn("prob(p: number)")}: return <icode>true</icode> _p_% of time, <icode>false</icode> in other cases.
+- ${D.fn("toss()")}: throwing a coin. Head (<icode>true</icode>) or tails (<icode>false</icode>).
 
 
 ${makeExample(
@@ -1914,32 +1922,32 @@ prob(60) :: script(2);
 prob(80) :: script(toss() ? script(3) : script(4))
 `, true)}
 
-- <icode>seed(val: number|string)</icode>: sets the seed of the random number generator. You can use a number or a string. The same seed will always return the same sequence of random numbers.
+- ${D.fn("seed(val: number|string)")}: sets the seed of the random number generator. You can use a number or a string. The same seed will always return the same sequence of random numbers.
 
 
 ## Chance operators
 
 Chance operators returning a boolean value are also available. They are super important because they also exist for another mechanism called **chaining**. Checkout the **Chaining** page to learn how to use them in different contexts!
 	
-- <icode>odds(n: number, sec?: number)</icode>: returns true for every n (odds) (eg. 1/4 = 0.25) in given seconds (sec)
-- <icode>almostNever(sec?: number)</icode>: returns true 0.1% in given seconds (sec)
-- <icode>rarely(sec?: number)</icode>: returns true 1% in given seconds (sec)
-- <icode>scaresly(sec?: number)</icode>: returns true 10% in given seconds (sec)
-- <icode>sometimes(sec?: number)</icode>: returns true 50% in given seconds (sec)
-- <icode>often(sec?: number)</icode>: returns true 75% in given seconds (sec)
-- <icode>frequently(sec?: number)</icode>: returns true 90% in given seconds (sec)
-- <icode>almostAlways(sec?: number)</icode>: returns true 99% in given seconds (sec)
+- ${D.fn("odds(n: number, sec?: number)")}: returns true for every n (odds) (eg. 1/4 = 0.25) in given seconds (sec)
+- ${D.fn("almostNever(sec?: number)")}: returns true 0.1% in given seconds (sec)
+- ${D.fn("rarely(sec?: number)")}: returns true 1% in given seconds (sec)
+- ${D.fn("scaresly(sec?: number)")}: returns true 10% in given seconds (sec)
+- ${D.fn("sometimes(sec?: number)")}: returns true 50% in given seconds (sec)
+- ${D.fn("often(sec?: number)")}: returns true 75% in given seconds (sec)
+- ${D.fn("frequently(sec?: number)")}: returns true 90% in given seconds (sec)
+- ${D.fn("almostAlways(sec?: number)")}: returns true 99% in given seconds (sec)
 	
 ## Math functions
 	
-- <icode>max(...values: number[]): number</icode>: returns the maximum value of a list of numbers.
-- <icode>min(...values: number[]): number</icode>: returns the minimum value of a list of numbers.
-- <icode>mean(...values: number[]): number</icode>: returns the arithmetic mean of a list of numbers.
-- <icode>limit(value: number, min: number, max: number): number</icode>: Limits a value between a minimum and a maximum. 
+- ${D.fn("max(...values: number[]): number")}: returns the maximum value of a list of numbers.
+- ${D.fn("min(...values: number[]): number")}: returns the minimum value of a list of numbers.
+- ${D.fn("mean(...values: number[]): number")}: returns the arithmetic mean of a list of numbers.
+- ${D.fn("limit(value: number, min: number, max: number): number")}: Limits a value between a minimum and a maximum. 
 	
 ## Delay functions
 	
-- <icode>delay(ms: number, func: Function): void</icode>: Delays the execution of a function by a given number of milliseconds.
+- ${D.fn("delay(ms: number, func: Function): void")}: Delays the execution of a function by a given number of milliseconds.
 
 ${makeExample(
 	"Phased woodblocks",
@@ -1949,7 +1957,7 @@ mod(.5) :: delay(usine(.125) * 80, () => sound('east').out())
 mod(.5) :: delay(50, () => sound('east').out())
 `, true)}
 
-- <icode>delayr(ms: number, nb: number, func: Function): void</icode>: Delays the execution of a function by a given number of milliseconds, repeated a given number of times.
+- ${D.fn("delayr(ms: number, nb: number, func: Function): void")}: Delays the execution of a function by a given number of milliseconds, repeated a given number of times.
 
 ${makeExample(
 	"Another woodblock texture",
@@ -2044,9 +2052,9 @@ ${makeExample(
 ## Ziffers
 
 Ziffers patterns can be chained to <icode>sound()</icode> and <icode>midi()</icode> as well. Chaining is often used as an alternative to passing values in objects as an option, which can be super cumbersome. The available chaining methods are:
-* <icode>key(key: string)</icode>: for changing key (_e.g._ <icode>"C"</icode> or <icode>"F#"</icode>)
-* <icode>scale(scale: string)</icode>: for changing the current scale (_e.g._ <icode>"rocritonic"</icode> or <icode>"pentatonic"</icode>)
-* <icode>octave(n: number)</icode>: for changing octave (_e.g._ <icode>0</icode> or <icode>2</icode>)
+* ${D.fn("key(key: string)")}: for changing key (_e.g._ <icode>"C"</icode> or <icode>"F#"</icode>)
+* ${D.fn("scale(scale: string)")}: for changing the current scale (_e.g._ <icode>"rocritonic"</icode> or <icode>"pentatonic"</icode>)
+* ${D.fn("octave(n: number)")}: for changing octave (_e.g._ <icode>0</icode> or <icode>2</icode>)
 
 * <icode>sound()</icode>: for outputting pattern as a Sound (See **Sounds**)
 * <icode>midi()</icode> - for outputting pattern as MIDI (See **MIDI**)
@@ -2079,5 +2087,6 @@ z1('s 0 5 7 0 3 7 0 2 7 0 1 7 0 1 6 5 4 3 2')
     reference: reference,
     shortcuts: shortcuts,
     about: about,
+    _helper: D
   };
 };
